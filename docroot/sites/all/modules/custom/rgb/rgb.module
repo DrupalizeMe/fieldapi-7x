@@ -2,3 +2,50 @@
 /**
  * @file
  */
+
+/**
+ * Implements hook_field_info().
+ */
+function rgb_field_info() {
+  return array(
+    'rgb_color' => array(
+      'label' => t('Color'),
+      'description' => t('This field stores an RGB color and label in the database.'),
+      'default_widget' => 'rgb_textfield',
+      'default_formatter' => 'rgb_raw',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function rgb_field_widget_info() {
+  return array(
+    'rgb_textfield' => array(
+      'label' => t('RGB Textfields'),
+      'field types' => array('rgb_color'),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function rgb_field_formatter_info() {
+  return array(
+    'rgb_raw' => array(
+      'label' => t('Raw color value'),
+      'field types' => array('rgb_color'),
+    ),
+  );
+}
+
+
+
+
+
+
+
+
