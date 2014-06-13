@@ -45,10 +45,33 @@ function rgb_field_widget_form(&$form, &$form_state, $field, $instance, $langcod
     '#default_value' => isset($items[$delta]['rgb']) ? $items[$delta]['rgb'] : '',
   );
 
+  if (isset($instance['widget']['settings']['rgb_label_text'])) {
+    $label = t('@label:', array('@label' => $instance['widget']['settings']['rgb_label_text']));
+  }
+  else {
+    $label = t('Color:');
+  }
+
   $element['label'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('Color name: '),
+    '#field_prefix' => $label,
     '#default_value' => isset($items[$delta]['label']) ? $items[$delta]['label'] : '',
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function rgb_field_widget_settings_form($field, $instance) {
+  $element = array(
+    'rgb_label_text' => array(
+      '#type' => 'textfield',
+      '#title' => t('Alternate label text'),
+      '#description' => t('If an alternate label text is provided it will be used in place of the default "Color" title for the label field.'),
+      '#default_value' => isset($instance['widget']['settings']['rgb_label_text']) ? $instance['widget']['settings']['rgb_label_text'] : '',
+    ),
   );
 
   return $element;
