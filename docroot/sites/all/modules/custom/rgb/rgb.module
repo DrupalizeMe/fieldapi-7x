@@ -113,10 +113,41 @@ function rgb_field_formatter_info() {
       'label' => t('Raw color value'),
       'field types' => array('rgb_color'),
     ),
+    'rgb_box' => array(
+      'label' => t('Color block with label'),
+      'field types' => array('rgb_color'),
+    ),
   );
 }
 
+/**
+ * Implements hook_field_formatter_view().
+ */
+function rgb_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, &$items, $display) {
+  $element = array();
 
+  switch ($display['type']) {
+    case 'rgb_raw':
+      foreach ($items as $key => $value) {
+        $element[$key] = array(
+          '#type' => 'markup',
+          '#markup' => t('#@hex', array('@hex' => $value['rgb'])),
+        );
+      }
+      break;
+
+    case 'rgb_box':
+      foreach ($items as $key => $value) {
+        $element[$key] = array(
+          '#type' => 'markup',
+          '#markup' => '<div style="background-color: #' . check_plain($value['rgb']) . '">' . check_plain($value['label']) . '</div>',
+        );
+      }
+      break;
+  }
+
+ return $element;
+}
 
 
 
