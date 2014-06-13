@@ -116,6 +116,10 @@ function rgb_field_formatter_info() {
     'rgb_box' => array(
       'label' => t('Color block with label'),
       'field types' => array('rgb_color'),
+      'settings' => array(
+        'width' => 25,
+        'height' => 25,
+      ),
     ),
   );
 }
@@ -124,6 +128,7 @@ function rgb_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function rgb_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, &$items, $display) {
+  $settings = $display['settings'];
   $element = array();
 
   switch ($display['type']) {
@@ -140,7 +145,10 @@ function rgb_field_formatter_view($entity_type, $entity, $field, $instance, $lan
       foreach ($items as $key => $value) {
         $element[$key] = array(
           '#type' => 'markup',
-          '#markup' => '<div style="background-color: #' . check_plain($value['rgb']) . '">' . check_plain($value['label']) . '</div>',
+          '#markup' => '<div style="background: #' . check_plain($value['rgb']) . ';
+              width: '. check_plain($settings['width']) .'px;
+              height: '. check_plain($settings['height']) .'px;">' . check_plain($value['label']) . '</div>',
+
         );
       }
       break;
@@ -148,6 +156,53 @@ function rgb_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 
  return $element;
 }
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function rgb_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $instance['display'][$view_mode]['settings'];
+
+  if ($display['type'] == 'rgb_box') {
+    $output = t('Box size: @widthx@height', array('@width' => $settings['width'], '@height' => $settings['height']));
+    return $output;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function rgb_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array();
+  if ($display['type'] == 'rgb_box') {
+      $element['width'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Box width'),
+        '#default_value' => $settings['width'],
+      );
+      $element['height'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Box height'),
+        '#default_value' => $settings['height'],
+      );
+  }
+  
+  return $element;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
